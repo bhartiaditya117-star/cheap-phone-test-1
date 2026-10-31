@@ -19,4 +19,6 @@ if(connected){before=await cmd(["logcat","-d","-t","300"]);launch=await cmd(["sh
 checks.push({name:"Android logs before actions",...before},{name:"Launch app",...launch},{name:"Android logs after actions",...after});
 let run={id:"run_"+Date.now(),profile,packageName,journey,startedAt:new Date().toISOString(),status:connected?"completed":"error",note:"Command completion does not prove UI correctness; manually verify the app.",checks};let all=read(RUNS);all.unshift(run);write(RUNS,all);s.json(run)});
 app.get("/api/runs/:id/export",(q,s)=>{let r=read(RUNS).find(x=>x.id===q.params.id);if(!r)return s.status(404).json({error:"Run not found"});s.set("Content-Disposition",`attachment; filename="${r.id}.json`);s.json(r)});
-app.listen(PORT,()=>console.log(`Cheap Phone Test running at http://localhost:${PORT}`));
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Cheap Phone Test running on port ${PORT}`);
+});
